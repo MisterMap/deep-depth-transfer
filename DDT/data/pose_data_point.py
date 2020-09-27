@@ -1,4 +1,3 @@
-import kornia
 import numpy as np
 import torch
 from DDT.utils.math import numpy_euler_angles_from_rotation_matrix

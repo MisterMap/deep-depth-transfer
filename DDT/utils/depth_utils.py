@@ -7,7 +7,7 @@ class DepthManager:
     def get_depth(frame):
         """
         Get depth map from frame (left and right image) with StereoBM (OpenCV)
-        :param frame: frame from kitti dataset (consists left and right image)
+        :param frame: frame from kitti datasets (consists left and right image)
         :return: depth map
         """
         left, right = frame

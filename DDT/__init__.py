@@ -1,3 +1,3 @@
 from .models import UnDeepVO
-from .problems import UnsupervisedDatasetManager, UnsupervisedDepthProblem
+from .problems import UnsupervisedDepthProblem
 from .utils import OptimizerManager

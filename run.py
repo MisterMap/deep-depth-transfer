@@ -23,7 +23,7 @@ parser.add_argument('-method',
                     help='Unsupervised or supervised method')
 
 parser.add_argument('-main_dir',
-                    default='dataset',
+                    default='datasets',
                     type=str,
                     dest='main_dir',
                     help='Path to the directory containing data')
@@ -143,8 +143,8 @@ lengths = args.split
 problem = None
 if args.method == "unsupervised":
     sequence_8 = Downloader('08')
-    if not os.path.exists("./dataset/poses"):
-        print("Download dataset")
+    if not os.path.exists("./datasets/poses"):
+        print("Download datasets")
         sequence_8.download_sequence()
     dataset = pykitti.odometry(MAIN_DIR, '08', frames=range(*args.frames_range))
     dataset_manager = UnsupervisedDatasetManager(dataset, lengths=lengths)

@@ -1,12 +1,11 @@
 # Pacharm settings
 .idea/
 
-# Virtual environment
+# Venv
 venv/
 
-# Dataset folders
-dataset/
-test/data/
+# Dataset
+datasets/
 
 # Python chache
 __pycache__/
@@ -16,6 +15,7 @@ __pycache__/
 # Logs folders
 logs
 tmp
+mlruns
 
 # Audio and video
 *.avi
@@ -26,6 +26,7 @@ tmp
 *.bmp
 *.png
 *.svg
+!test/loss_dataset/*.png
 
 # Archives
 *.tgz

@@ -19,8 +19,8 @@ else:
 class TestPoseLoss(unittest.TestCase):
     def test_pose_loss(self):
         sequence_8 = Downloader('08')
-        if not os.path.exists("./dataset/poses"):
-            print("Download dataset")
+        if not os.path.exists("datasets/poses"):
+            print("Download datasets")
             sequence_8.download_sequence()
         dataset = pykitti.odometry(sequence_8.main_dir, sequence_8.sequence_id, frames=range(0, 3, 1))
         dataset_manager = UnsupervisedDatasetManager(dataset, lengths=(1, 1, 1), num_workers=WORKERS_COUNT)

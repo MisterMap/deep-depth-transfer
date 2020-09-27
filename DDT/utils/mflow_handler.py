@@ -2,6 +2,7 @@ import os
 
 import mlflow
 import mlflow.exceptions
+import requests
 
 DEFAULT_USER_NAME = ""
 DEFAULT_PASSWORD = ""
@@ -55,6 +56,10 @@ class MlFlowHandler(object):
             mlflow.log_params(self._mlflow_parameters)
 
         except mlflow.exceptions.MlflowException as msg:
+            self._enable_mlflow = False
+            print(f"[WARNING][MlFlowHandler] - [StartCallback] {msg}")
+            print(f"[WARNING][MlFlowHandler] - [StartCallback] mlflow is disabled")
+        except requests.exceptions.ConnectionError as msg:
             self._enable_mlflow = False
             print(f"[WARNING][MlFlowHandler] - [StartCallback] {msg}")
             print(f"[WARNING][MlFlowHandler] - [StartCallback] mlflow is disabled")

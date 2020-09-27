@@ -3,7 +3,7 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 class Downloader(object):
-    def __init__(self, sequence_id='08', main_dir='dataset'):
+    def __init__(self, sequence_id='08', main_dir='datasets'):
         self.sequence_id = sequence_id
         self.main_dir = main_dir
         self.sequence = Sequence(self.sequence_id, self.main_dir)
@@ -33,7 +33,7 @@ class Downloader(object):
 
 
 class Sequence(object):
-    def __init__(self, sequence_id='08', main_dir='dataset'):
+    def __init__(self, sequence_id='08', main_dir='datasets'):
         self.sequence_id = sequence_id
         self.main_dir = main_dir
         self.calib = Kitti_link('data_odometry_calib.zip', '1jW1Yr8qBD2m63QQjN_q_EJWiQIyhtFj0')
@@ -43,7 +43,7 @@ class Sequence(object):
 
 
 class Kitti_link(object):
-    def __init__(self, name, id, ins=False, main_dir='dataset'):
+    def __init__(self, name, id, ins=False, main_dir='datasets'):
         if ins:
             self.name = os.path.join(os.curdir, main_dir, 'sequences', name)
         else:
