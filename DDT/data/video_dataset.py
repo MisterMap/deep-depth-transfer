@@ -4,7 +4,8 @@ from torch.utils.data import Dataset
 
 
 class VideoDataset(Dataset):
-    def __init__(self, left_video_dataset,
+    def __init__(self,
+                 left_video_dataset,
                  right_video_dataset=None,
                  pose_dataset=None,
                  transform=None):
@@ -35,6 +36,8 @@ class VideoDataset(Dataset):
             "left_next_image": torch.from_numpy(image_data_point["image3"]).permute(2, 0, 1),
             "right_next_image": torch.from_numpy(image_data_point["image4"]).permute(2, 0, 1),
         }
+        if self._pose_dataset is None:
+            return {**image_data_point}
         return {**image_data_point, **self._pose_dataset[index]}
 
     def __len__(self):

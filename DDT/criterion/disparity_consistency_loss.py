@@ -1,5 +1,5 @@
-import torch
 import kornia
+import torch
 
 
 class DisparityConsistencyLoss(torch.nn.Module):
