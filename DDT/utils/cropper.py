@@ -4,12 +4,12 @@ import torch
 class Cropper:
     @staticmethod
     def make_crop(img, d=64):
-        '''
+        """
         Make dimensions divisible by `d`
         :param img: source image
         :param d: divide on parameter
         :return: cropped image
-        '''
+        """
         new_size = (img.shape[0] - img.shape[0] % d,
                     img.shape[1] - img.shape[1] % d)
 

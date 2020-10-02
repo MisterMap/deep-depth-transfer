@@ -16,6 +16,7 @@ setup(name='DDT',
       author='Deep project team',
       author_email='',
       package_dir={},
-      packages=["DDT", "DDT.utils", "DDT.models", "DDT.data", "DDT.data.supervised", "DDT.problems", "DDT.criterion"],
+      packages=["DDT", "DDT.utils", "DDT.models", "DDT.data", "DDT.problems", "DDT.criterion", "DDT.data.kitty",
+                "DDT.data.custom"],
       install_requires=install_requires
       )
