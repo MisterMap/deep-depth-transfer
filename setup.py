@@ -16,7 +16,8 @@ setup(name='deep_depth_transfer',
       author='Deep project team',
       author_email='',
       package_dir={},
-      packages=["deep_depth_transfer", "deep_depth_transfer.utils", "deep_depth_transfer.models", "deep_depth_transfer.data", "deep_depth_transfer.problems", "deep_depth_transfer.criterion", "deep_depth_transfer.data.kitti",
-                "deep_depth_transfer.data.custom"],
+      packages=["deep_depth_transfer", "deep_depth_transfer.utils", "deep_depth_transfer.models",
+          "deep_depth_transfer.data", "deep_depth_transfer.criterion", "deep_depth_transfer.data.kitti",
+          "deep_depth_transfer.data.custom"],
       install_requires=install_requires
       )
