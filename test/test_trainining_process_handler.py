@@ -1,5 +1,5 @@
 import unittest
-from DDT.utils import TrainingProcessHandler
+from deep_depth_transfer.utils import TrainingProcessHandler
 
 
 class TestTrainingProcessHandler(unittest.TestCase):

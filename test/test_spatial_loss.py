@@ -8,8 +8,8 @@ import wget
 from PIL import Image
 
 from test.utils import create_depth_map, read_calib
-from DDT.data.cameras_calibration import CamerasCalibration
-from DDT.criterion import SpatialPhotometricConsistencyLoss
+from deep_depth_transfer.data.cameras_calibration import CamerasCalibration
+from deep_depth_transfer.criterion import SpatialPhotometricConsistencyLoss
 
 device = "cpu"
 
