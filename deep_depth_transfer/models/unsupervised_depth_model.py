@@ -4,13 +4,13 @@ import torch.nn as nn
 
 
 class UnsupervisedDepthModel(pl.LightningModule):
-    def __init__(self, pose_net, depth_net, criterion, optimizer_parameters, depth_visualizer=None,
+    def __init__(self, pose_net, depth_net, criterion, optimizer_parameters, result_visualizer=None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._pose_net = pose_net
         self._depth_net = depth_net
         self._criterion = criterion
-        self._depth_visualizer = depth_visualizer
+        self._result_visualizer = result_visualizer
         self._optimizer_parameters = optimizer_parameters
         self.example_input_array = (torch.zeros((1, 3, 128, 384), dtype=torch.float),
                                     torch.zeros((1, 3, 128, 384), dtype=torch.float))
@@ -56,11 +56,22 @@ class UnsupervisedDepthModel(pl.LightningModule):
         result.log_dict(losses, on_step=True)
         return result
 
+    def make_figure(self, batch):
+        images = [
+            batch["left_current_image"],
+            batch["left_next_image"],
+            batch["right_current_image"],
+            batch["right_next_image"]
+        ]
+        depths = [self.depth(image[:1])[0] for image in images]
+        images = [image[0] for image in images]
+        return self._result_visualizer(images, depths)
+
     def validation_step(self, batch, batch_index: int):
         losses = self.loss(batch)
 
-        if batch_index == 0 and self._depth_visualizer is not None:
-            self.logger.experiment.add_image(self._depth_visualizer(batch[:1]))
+        if batch_index == 0 and self._result_visualizer is not None:
+            self.logger.log_figure("depth_reconstruction", self.make_figure(batch), self.global_step)
 
         result = pl.EvalResult(checkpoint_on=losses["loss"])
         result.log_dict(losses, on_epoch=True)
