@@ -56,7 +56,11 @@ class UnsupervisedDepthModel(pl.LightningModule):
         result.log_dict(losses, on_step=True)
         return result
 
-    def make_figure(self, batch):
+    def make_figure(self, batch, batch_index):
+        if self._result_visualizer is None:
+            return None
+        if not self._result_visualizer.batch_index == batch_index:
+            return None
         images = [
             batch["left_current_image"],
             batch["left_next_image"],
@@ -70,8 +74,9 @@ class UnsupervisedDepthModel(pl.LightningModule):
     def validation_step(self, batch, batch_index: int):
         losses = self.loss(batch)
 
-        if batch_index == 0 and self._result_visualizer is not None:
-            self.logger.log_figure("depth_reconstruction", self.make_figure(batch), self.global_step)
+        figure = self.make_figure(batch, batch_index)
+        if figure is not None:
+            self.logger.log_figure("depth_reconstruction", figure, self.global_step)
 
         result = pl.EvalResult(checkpoint_on=losses["loss"])
         result.log_dict(losses, on_epoch=True)

@@ -3,11 +3,12 @@ import numpy as np
 
 
 class ResultVisualizer(object):
-    def __init__(self, is_show_synthesized=False, max_depth=100., min_depth=0.1, dpi=150):
+    def __init__(self, is_show_synthesized=False, max_depth=100., min_depth=0.1, dpi=150, batch_index=0):
         self._is_show_synthesized = is_show_synthesized
         self._max_depth = max_depth
         self._min_depth = min_depth
         self._dpi = dpi
+        self.batch_index = batch_index
 
     def __call__(self, images, depths):
         left_current_image = images[0].cpu().permute(1, 2, 0).detach().numpy()
