@@ -26,6 +26,6 @@ class ScaledUnsupervisedDepthModel(UnsupervisedDepthModel):
         all_parameters = set(self.parameters())
         other_parameters = all_parameters - scale_parameters
         return torch.optim.Adam([
-            {"params": other_parameters},
-            {"params": scale_parameters, "lr": self._scale_lr}],
+            {"params": list(other_parameters)},
+            {"params": list(scale_parameters), "lr": self._scale_lr}],
             **self._optimizer_parameters)
