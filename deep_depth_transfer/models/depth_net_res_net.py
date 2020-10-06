@@ -106,7 +106,7 @@ class DepthNetResNet(nn.Module):
         # nn.Upsample(scale_factor=2)
         # self.last_up = LastUpBlock(n_base_channels * 4, 1)
 
-    def forward(self, x):
+    def forward(self, x, is_return_depth=True):
 
         outputs_before_pooling = []
 
@@ -134,7 +134,9 @@ class DepthNetResNet(nn.Module):
             
         out = self.last_up(out)
         out = self._last_conv(out)
-        
+        if not self.is_return_depth:
+            return out
+
         if not self.inverse_sigmoid:
             out = self.min_depth + torch.sigmoid(out) * (self.max_depth - self.min_depth)
         else:
