@@ -3,9 +3,10 @@ import numpy as np
 
 
 class ResultVisualizer(object):
-    def __init__(self, is_show_synthesized=False, max_depth=100., dpi=150):
+    def __init__(self, is_show_synthesized=False, max_depth=100., min_depth=0.1, dpi=150):
         self._is_show_synthesized = is_show_synthesized
         self._max_depth = max_depth
+        self._min_depth = min_depth
         self._dpi = dpi
 
     def __call__(self, images, depths):
@@ -27,7 +28,7 @@ class ResultVisualizer(object):
         axis.set_yticks([])
 
     def show_depth(self, axis, image, caption="None"):
-        axis.imshow(np.clip(image, 0, self._max_depth) / self._max_depth, cmap="inferno")
+        axis.imshow(self._min_depth / np.clip(image, self._min_depth, self._max_depth), cmap="inferno")
         axis.set_title(caption)
         axis.set_xticks([])
         axis.set_yticks([])
