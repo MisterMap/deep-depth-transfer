@@ -134,7 +134,7 @@ class DepthNetResNet(nn.Module):
             
         out = self.last_up(out)
         out = self._last_conv(out)
-        if not self.is_return_depth:
+        if not is_return_depth:
             return out
 
         if not self.inverse_sigmoid:
