@@ -5,10 +5,10 @@ import unittest
 import pykitti.odometry
 import torch
 
-from DDT.criterion import PoseLoss
-from DDT.data import Downloader
-from DDT.problems import UnsupervisedDatasetManager
-from DDT.utils.math import translate_pose, rotation_matrix_from_angles, numpy_euler_angles_from_rotation_matrix
+from deep_depth_transfer.criterion import PoseLoss
+from deep_depth_transfer.data import Downloader
+from deep_depth_transfer.problems import UnsupervisedDatasetManager
+from deep_depth_transfer.utils.math import translate_pose, rotation_matrix_from_angles, numpy_euler_angles_from_rotation_matrix
 
 if sys.platform == "win32":
     WORKERS_COUNT = 0

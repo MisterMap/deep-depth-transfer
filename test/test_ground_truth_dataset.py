@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from PIL import Image
 
-from DDT.data.supervised import GroundTruthDataset
+from deep_depth_transfer.data.supervised import GroundTruthDataset
 
 
 class TestGroundTruthDataset(unittest.TestCase):

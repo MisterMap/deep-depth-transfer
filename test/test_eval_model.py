@@ -4,10 +4,10 @@ import cv2
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-from DDT import UnDeepVO
-from DDT.problems import DepthModelEvaluator
-from DDT.data.supervised import DataTransformManager
-from DDT.problems import VideoVisualizer
+from deep_depth_transfer import UnDeepVO
+from deep_depth_transfer.problems import DepthModelEvaluator
+from deep_depth_transfer.data.supervised import DataTransformManager
+from deep_depth_transfer.problems import VideoVisualizer
 
 
 class TestEvalModel(unittest.TestCase):

@@ -5,9 +5,9 @@ import torch
 import torchvision
 from PIL import Image
 
-from DDT.criterion import SpatialLosses, TemporalImageLosses
-from DDT.models import UnDeepVO
-from DDT.models.utils import init_weights
+from deep_depth_transfer.criterion import SpatialLosses, TemporalImageLosses
+from deep_depth_transfer.models import UnDeepVO
+from deep_depth_transfer.models.utils import init_weights
 device = "cpu"
 
 

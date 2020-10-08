@@ -1,13 +1,13 @@
 import sys
 import unittest
 
-from DDT.data import Downloader
-from DDT.models import DepthNet
-from DDT.problems import SupervisedDatasetManager, SupervisedDepthProblem
-from DDT.utils import OptimizerManager, TrainingProcessHandler
-from DDT.criterion import SupervisedCriterion
+from deep_depth_transfer.data import Downloader
+from deep_depth_transfer.models import DepthNet
+from deep_depth_transfer.problems import SupervisedDatasetManager, SupervisedDepthProblem
+from deep_depth_transfer.utils import OptimizerManager, TrainingProcessHandler
+from deep_depth_transfer.criterion import SupervisedCriterion
 
-from DDT.data.supervised import GroundTruthDataset
+from deep_depth_transfer.data.supervised import GroundTruthDataset
 
 if sys.platform == "win32":
     WORKERS_COUNT = 0

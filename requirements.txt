@@ -18,3 +18,4 @@ boto3
 setuptools
 wheel
 grpcio==1.26.0
+pytorch-lightning

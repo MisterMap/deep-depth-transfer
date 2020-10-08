@@ -2,10 +2,10 @@ import unittest
 
 import torch
 
-from DDT.data.supervised import GroundTruthDataset
+from deep_depth_transfer.data.supervised import GroundTruthDataset
 import sys
 
-from DDT.problems.supervised_dataset_manager import SupervisedDatasetManager
+from deep_depth_transfer.problems.supervised_dataset_manager import SupervisedDatasetManager
 
 if sys.platform == "win32":
     WORKERS_COUNT = 0
