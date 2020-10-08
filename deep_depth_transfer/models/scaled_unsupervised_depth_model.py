@@ -3,12 +3,10 @@ from .unsupervised_depth_model import UnsupervisedDepthModel
 
 
 class ScaledUnsupervisedDepthModel(UnsupervisedDepthModel):
-    def __init__(self, pose_net, depth_net, criterion, optimizer_parameters, result_visualizer=None, scale_lr=1e-3,
-                 *args, **kwargs):
-        super().__init__(pose_net, depth_net, criterion, optimizer_parameters, result_visualizer, *args, **kwargs)
-        self._log_min_depth = torch.nn.Parameter(torch.tensor(0.))
-        self._log_scale = torch.nn.Parameter(torch.tensor(0.))
-        self._scale_lr = scale_lr
+    def __init__(self, params, pose_net, depth_net, criterion, result_visualizer=None, *args, **kwargs):
+        super().__init__(params, pose_net, depth_net, criterion, result_visualizer, *args, **kwargs)
+        self._log_min_depth = torch.nn.Parameter(torch.tensor(self.hparams.initial_log_min_depth))
+        self._log_scale = torch.nn.Parameter(torch.tensor(self.hparams.initial_log_scale))
 
     def depth(self, x):
         out = self._depth_net(x, is_return_depth=False)
@@ -27,5 +25,5 @@ class ScaledUnsupervisedDepthModel(UnsupervisedDepthModel):
         other_parameters = all_parameters - scale_parameters
         return torch.optim.Adam([
             {"params": list(other_parameters)},
-            {"params": list(scale_parameters), "lr": self._scale_lr}],
-            **self._optimizer_parameters)
+            {"params": list(scale_parameters), "lr": self.hparams.scale_lr}],
+            lr=self.hparams.lr, betas=(self.hparams.beta1, self.hparams.beta2))

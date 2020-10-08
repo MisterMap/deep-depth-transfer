@@ -7,6 +7,7 @@ from test.data_module_mock import DataModuleMock
 import sys
 import pytorch_lightning as pl
 import pytorch_lightning.loggers
+from pytorch_lightning.utilities.parsing import AttributeDict
 
 
 if sys.platform == "win32":
@@ -33,7 +34,15 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
         depth_net = DepthNetResNet()
         criterion = UnsupervisedCriterion(self._data_module.get_cameras_calibration(), 1, 1)
 
-        self._model = ScaledUnsupervisedDepthModel(pose_net, depth_net, criterion, {"lr": 1e-3}).cuda()
+        params = AttributeDict(
+            lr=1e-3,
+            beta1=0.99,
+            beta2=0.9,
+            scale_lr=1e-3,
+            initial_log_scale=0.,
+            initial_log_min_depth=0.
+        )
+        self._model = ScaledUnsupervisedDepthModel(params, pose_net, depth_net, criterion).cuda()
 
     def test_unsupervised_depth_model(self):
         tb_logger = pl.loggers.TensorBoardLogger('logs/')

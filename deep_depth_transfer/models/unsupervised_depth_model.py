@@ -4,14 +4,15 @@ import torch.nn as nn
 
 
 class UnsupervisedDepthModel(pl.LightningModule):
-    def __init__(self, pose_net, depth_net, criterion, optimizer_parameters, result_visualizer=None,
+    def __init__(self, params, pose_net, depth_net, criterion, result_visualizer=None,
                  *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__()
+        self.save_hyperparameters(params)
+        self.hparams.model = type(self)
         self._pose_net = pose_net
         self._depth_net = depth_net
         self._criterion = criterion
         self._result_visualizer = result_visualizer
-        self._optimizer_parameters = optimizer_parameters
         self.example_input_array = (torch.zeros((1, 3, 128, 384), dtype=torch.float),
                                     torch.zeros((1, 3, 128, 384), dtype=torch.float))
 
@@ -83,4 +84,4 @@ class UnsupervisedDepthModel(pl.LightningModule):
         return result
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), **self._optimizer_parameters)
+        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr, betas=(self.hparams.beta1, self.hparams.beta2))
