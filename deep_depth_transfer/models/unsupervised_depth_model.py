@@ -8,7 +8,7 @@ class UnsupervisedDepthModel(pl.LightningModule):
                  *args, **kwargs):
         super().__init__()
         self.save_hyperparameters(params)
-        self.hparams.model = type(self)
+        self.hparams.model = str(type(self))
         self._pose_net = pose_net
         self._depth_net = depth_net
         self._criterion = criterion
