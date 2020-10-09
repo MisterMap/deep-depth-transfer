@@ -8,13 +8,13 @@ import os
 import torch
 import pykitti.odometry
 
-from DDT.criterion import UnsupervisedCriterion, SupervisedCriterion
-from DDT.data import Downloader
-from DDT.data.supervised import GroundTruthDataset
-from DDT.models import UnDeepVO, DepthNet
-from DDT.problems import UnsupervisedDatasetManager, UnsupervisedDepthProblem, SupervisedDatasetManager, \
+from deep_depth_transfer.criterion import UnsupervisedCriterion, SupervisedCriterion
+from deep_depth_transfer.data import Downloader
+from deep_depth_transfer.data.supervised import GroundTruthDataset
+from deep_depth_transfer.models import UnDeepVO, DepthNet
+from deep_depth_transfer.problems import UnsupervisedDatasetManager, UnsupervisedDepthProblem, SupervisedDatasetManager, \
     SupervisedDepthProblem
-from DDT.utils import OptimizerManager, TrainingProcessHandler
+from deep_depth_transfer.utils import OptimizerManager, TrainingProcessHandler
 
 parser = argparse.ArgumentParser(description='Run parameters')
 parser.add_argument('-method',
@@ -176,7 +176,7 @@ if args.method == "unsupervised":
                                      enable_iteration_progress_bar=True)
     optimizer_manager = OptimizerManager(lr=args.lr, betas=(args.betta1, args.betta2))
     problem = UnsupervisedDepthProblem(model, criterion, optimizer_manager, dataset_manager, handler,
-                                       batch_size=args.batch_size, name="DDT", device=args.device)
+                                       batch_size=args.batch_size, name="deep_depth_transfer", device=args.device)
 
 elif args.method == "supervised":
     dataset = GroundTruthDataset(length=lengths)

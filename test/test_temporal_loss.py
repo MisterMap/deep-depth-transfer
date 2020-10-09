@@ -7,10 +7,10 @@ import torchvision
 import wget
 from PIL import Image
 
-from DDT.criterion import TemporalPhotometricConsistencyLoss
-from DDT.data.cameras_calibration import CamerasCalibration
+from deep_depth_transfer.criterion import TemporalPhotometricConsistencyLoss
+from deep_depth_transfer.data.cameras_calibration import CamerasCalibration
 from test.utils import create_depth_map, read_calib
-from DDT.utils.math import generate_relative_transformation
+from deep_depth_transfer.utils.math import generate_relative_transformation
 device = "cpu"
 
 
