@@ -15,6 +15,13 @@ class UnsupervisedDepthModel(pl.LightningModule):
         self._result_visualizer = result_visualizer
         self.example_input_array = (torch.zeros((1, 3, 128, 384), dtype=torch.float),
                                     torch.zeros((1, 3, 128, 384), dtype=torch.float))
+        self._mean = torch.tensor([0.485, 0.456, 0.406])[:, None, None]
+        self._std = torch.tensor([0.229, 0.224, 0.225])[:, None, None]
+
+    def cuda(self, *args, **kwargs):
+        self._mean = self._mean.cuda(*args, **kwargs)
+        self._std = self._std.cuda(*args, **kwargs)
+        return super().to(*args, **kwargs)
 
     def init_weights(self):
         for module in self.modules():
@@ -24,10 +31,13 @@ class UnsupervisedDepthModel(pl.LightningModule):
                     module.bias.data.fill_(0.01)
 
     def depth(self, x):
+        x = (x - self._mean) / self._std
         out = self._depth_net(x)
         return out
 
     def pose(self, x, reference_frame):
+        x = (x - self._mean) / self._std
+        reference_frame = (reference_frame - self._mean) / self._std
         (out_rotation, out_translation) = self._pose_net(x, reference_frame)
         return out_rotation, out_translation
 
