@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 
 # noinspection PyAbstractClass
 class UnsupervisedDepthDataModule(pl.LightningDataModule):
+    # noinspection PyArgumentList
     def __init__(self, train_dataset, data_transform_manager, cameras_calibration, batch_size=64,
                  test_dataset=None,
                  num_workers=4, split=(80, 10, 10)):

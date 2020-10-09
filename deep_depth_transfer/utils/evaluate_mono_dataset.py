@@ -26,7 +26,7 @@ class EvaluateMonoDataset():
             with torch.no_grad():
                 pred_depth = self.model.depth(val_dict["tensor"].to(device, dtype=torch.float))
             depth_image = pred_depth[0].detach().cpu().permute(1, 2, 0).numpy()[:, :, 0]
-            metrics_all.append(self.m.calc_metrics(depth_image, cv2.resize(val_dict["groundtruth_depth"], (384, 128))))
+            metrics_all.append(self.m.calculate_metrics(depth_image, cv2.resize(val_dict["groundtruth_depth"], (384, 128))))
         result = np.array(metrics_all).mean(axis=0)
         if self._enable_mlflow:
             self._mlflow_loader(result)    
