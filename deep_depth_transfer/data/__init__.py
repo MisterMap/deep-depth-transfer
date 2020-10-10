@@ -1,1 +1,2 @@
 from .kitti.kitti_data_module_factory import KittiDataModuleFactory
+from .tum_rgbd.tum_validation_data_module_factory import TumValidationDataModuleFactory
