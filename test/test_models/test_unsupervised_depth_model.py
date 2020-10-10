@@ -37,5 +37,7 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
 
     def test_unsupervised_depth_model(self):
         tb_logger = pl.loggers.TensorBoardLogger('logs/')
-        trainer = pl.Trainer(logger=tb_logger, max_epochs=1, gpus=1, progress_bar_refresh_rate=20)
+        checkpoint_callback = pl.callbacks.ModelCheckpoint(filepath="checkpoints")
+        trainer = pl.Trainer(logger=tb_logger, max_epochs=1, gpus=1, progress_bar_refresh_rate=20,
+                             checkpoint_callback=checkpoint_callback)
         trainer.fit(self._model, self._data_module)

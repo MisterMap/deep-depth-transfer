@@ -39,3 +39,4 @@ mlruns
 *.pkl
 *.pt
 *.pth
+*.ckpt

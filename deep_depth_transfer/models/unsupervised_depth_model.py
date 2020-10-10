@@ -4,17 +4,21 @@ import torch.nn as nn
 
 
 class UnsupervisedDepthModel(pl.LightningModule):
-    def __init__(self, params, pose_net, depth_net, criterion, result_visualizer=None,
+    def __init__(self, params, pose_net, depth_net, criterion, result_visualizer=None, stereo=True, mono=True,
                  *args, **kwargs):
         super().__init__()
         self.save_hyperparameters(params)
         self.hparams.model = str(type(self))
+        assert stereo or mono
+        self._stereo = stereo
+        self._mono = mono
         self._pose_net = pose_net
         self._depth_net = depth_net
         self._criterion = criterion
         self._result_visualizer = result_visualizer
-        self.example_input_array = (torch.zeros((1, 3, 128, 384), dtype=torch.float),
-                                    torch.zeros((1, 3, 128, 384), dtype=torch.float))
+        self.example_input_array = (
+            torch.zeros((1, 3, 128, 384), dtype=torch.float),
+            torch.zeros((1, 3, 128, 384), dtype=torch.float))
         self._mean = torch.tensor([0.485, 0.456, 0.406])[:, None, None]
         self._std = torch.tensor([0.229, 0.224, 0.225])[:, None, None]
 
@@ -44,21 +48,48 @@ class UnsupervisedDepthModel(pl.LightningModule):
     def forward(self, x, reference_frame):
         return self.depth(x), self.pose(x, reference_frame)
 
-    def loss(self, batch):
+    def get_images(self, batch):
         # current_left, next_left, current_right, next_right
-        images = [
-            batch["left_current_image"],
-            batch["left_next_image"],
-            batch["right_current_image"],
-            batch["right_next_image"]
-        ]
+        if self._mono and self._stereo:
+            images = [
+                batch["left_current_image"],
+                batch["left_next_image"],
+                batch["right_current_image"],
+                batch["right_next_image"]
+            ]
+        elif self._mono:
+            images = [
+                batch["current_image"],
+                batch["next_image"]
+            ]
+        else:
+            images = [
+                batch["left_image"],
+                batch["right_image"]
+            ]
+        return images
+
+    def get_transformations(self, images):
+        if self._mono and self._stereo:
+            transformations = [
+                self.pose(images[0], images[1]),
+                self.pose(images[1], images[0]),
+                self.pose(images[2], images[3]),
+                self.pose(images[3], images[2])
+            ]
+        elif self._mono:
+            transformations = [
+                self.pose(images[0], images[1]),
+                self.pose(images[1], images[0])
+            ]
+        else:
+            transformations = None
+        return transformations
+
+    def loss(self, batch):
+        images = self.get_images(batch)
         depths = [self.depth(image) for image in images]
-        transformations = [
-            self.pose(images[0], images[1]),
-            self.pose(images[1], images[0]),
-            self.pose(images[2], images[3]),
-            self.pose(images[3], images[2])
-        ]
+        transformations = self.get_transformations(images)
         return self._criterion(images, depths, transformations)
 
     def training_step(self, batch, *args):
@@ -72,12 +103,7 @@ class UnsupervisedDepthModel(pl.LightningModule):
             return None
         if not self._result_visualizer.batch_index == batch_index:
             return None
-        images = [
-            batch["left_current_image"],
-            batch["left_next_image"],
-            batch["right_current_image"],
-            batch["right_next_image"]
-        ]
+        images = self.get_images(batch)
         depths = [self.depth(image[:1])[0] for image in images]
         images = [image[0] for image in images]
         return self._result_visualizer(images, depths)
@@ -94,4 +120,6 @@ class UnsupervisedDepthModel(pl.LightningModule):
         return result
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr, betas=(self.hparams.beta1, self.hparams.beta2))
+        return torch.optim.Adam(self.parameters(),
+                                lr=self.hparams.lr,
+                                betas=(self.hparams.beta1, self.hparams.beta2))
