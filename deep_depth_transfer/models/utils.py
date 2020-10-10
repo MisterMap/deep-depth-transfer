@@ -22,3 +22,10 @@ def freeze_feature_extractor(model):
     if model.__getattr__('_log_scale') and model.__getattr__('_log_min_depth'):
         model._log_scale.requires_grad = True
         model._log_min_depth.requires_grad = True
+        model._log_pose_scale.requires_grad = True
+
+
+def unfreeze_last_layer(model):
+    model._pose_net.transl3.requires_grad = True
+    model._pose_net.rot3.requires_grad = True
+    model._depth_net._last_conv.requires_grad = True
