@@ -5,6 +5,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import Dataset
 import numpy as np
 
+
 # noinspection PyUnresolvedReferences
 class TumValidationDataset(Dataset):
     def __init__(self, main_folder='datasets/tum_3', final_img_size=(128, 384)):

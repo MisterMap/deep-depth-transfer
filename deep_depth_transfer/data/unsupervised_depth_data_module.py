@@ -37,17 +37,17 @@ class UnsupervisedDepthDataModule(pl.LightningDataModule):
                           shuffle=True,
                           num_workers=self._num_workers)
 
-    def val_dataloader(self, with_normalize=False):
+    def val_dataloader(self, normalize=False):
         self._validation_dataset.dataset.set_transform(
-            self._data_transform_manager.get_validation_transform(with_normalize=with_normalize))
+            self._data_transform_manager.get_validation_transform(with_normalize=normalize))
         return DataLoader(self._validation_dataset,
                           batch_size=self._batch_size,
                           shuffle=False,
                           num_workers=self._num_workers)
 
-    def test_dataloader(self, with_normalize=False):
+    def test_dataloader(self, normalize=False):
         self._test_dataset.dataset.set_transform(
-            self._data_transform_manager.get_test_transform(with_normalize=with_normalize))
+            self._data_transform_manager.get_test_transform(with_normalize=normalize))
         return DataLoader(self._test_dataset,
                           batch_size=self._batch_size,
                           shuffle=False,

@@ -2,11 +2,13 @@ import albumentations
 
 
 class DataTransformManager:
-    custom_additional_targets = {"image2": "image", "image3": "image", "image4": "image"}
 
-    def __init__(self, used_img_size, final_img_size, transform_params):
+    def __init__(self, used_img_size, final_img_size, transform_params, custom_additional_targets=None):
+        if custom_additional_targets is None:
+            custom_additional_targets = {"image2": "image", "image3": "image", "image4": "image"}
+        self._custom_additional_targets = custom_additional_targets
         self._ratio = max(float(final_img_size[0]) / used_img_size[0],
-                          float(final_img_size[0]) / used_img_size[0])
+                          float(final_img_size[1]) / used_img_size[1])
         self._final_img_size = final_img_size
         self._scale_compose = [
             albumentations.Resize(
@@ -44,16 +46,16 @@ class DataTransformManager:
             self._train_compose.append(albumentations.Normalize(mean=(0, 0, 0), std=(1, 1, 1)))
 
     def get_train_transform(self):
-        return albumentations.Compose(self._train_compose, additional_targets=self.custom_additional_targets)
+        return albumentations.Compose(self._train_compose, additional_targets=self._custom_additional_targets)
 
     def get_validation_transform(self, with_resize=True, with_normalize=True):
         scale_compose = self._scale_compose if with_resize else []
         return albumentations.Compose(scale_compose + self.get_normalize(with_normalize),
-                                      additional_targets=self.custom_additional_targets)
+                                      additional_targets=self._custom_additional_targets)
 
     def get_test_transform(self, with_normalize=True):
         return albumentations.Compose(self._scale_compose + self.get_normalize(with_normalize),
-                                      additional_targets=self.custom_additional_targets)
+                                      additional_targets=self._custom_additional_targets)
 
     def get_normalize(self, with_normalize=True):
         if with_normalize:
