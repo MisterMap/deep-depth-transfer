@@ -1,14 +1,15 @@
-import unittest
-from deep_depth_transfer import PoseNetResNet, DepthNetResNet, UnsupervisedCriterion
-from deep_depth_transfer.data import KittiDataModuleFactory
-from deep_depth_transfer.models import ScaledUnsupervisedDepthModel
 import os
-from test.data_module_mock import DataModuleMock
 import sys
+import unittest
+
 import pytorch_lightning as pl
 import pytorch_lightning.loggers
 from pytorch_lightning.utilities.parsing import AttributeDict
 
+from deep_depth_transfer import PoseNetResNet, DepthNetResNet, UnsupervisedCriterion
+from deep_depth_transfer.data import KittiDataModuleFactory
+from deep_depth_transfer.models import ScaledUnsupervisedDepthModel
+from test.data_module_mock import DataModuleMock
 
 if sys.platform == "win32":
     WORKERS_COUNT = 0
