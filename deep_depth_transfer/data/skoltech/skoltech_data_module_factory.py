@@ -9,8 +9,8 @@ from ..video_dataset import VideoDataset
 
 class SkoltechDataModuleFactory():
     def __init__(self, directory="datasets"):
-        self._left_directory = os.path.join(directory, "sequences/01/image_2")
-        self._right_directory = os.path.join(directory, "sequences/01/image_3")
+        self._left_directory = os.path.join(os.path.join(directory,'sequences','01','image_2'))
+        self._right_directory = os.path.join(os.path.join(directory,'sequences','01','image_3'))
 
     def make_dataset_manager(self,
                              final_size,

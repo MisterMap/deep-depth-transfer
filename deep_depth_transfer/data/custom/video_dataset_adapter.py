@@ -15,4 +15,4 @@ class VideoDatasetAdapter(object):
         return image
 
     def get_image_size(self):
-        return np.array(Image.open(self._image_names[0])).shape[::-1]
+        return np.array(Image.open(self._image_names[0])).shape[::]
