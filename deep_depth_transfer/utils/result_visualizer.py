@@ -15,20 +15,21 @@ class ResultVisualizer(object):
         self.batch_index = batch_index
 
     def generate_image(self, left_image, right_image, left_depth, right_depth):
+        device = left_image.device
         with torch.no_grad():
             generated_left_image = kornia.warp_frame_depth(
-                right_image,
-                left_depth,
-                self._cameras_calibration.transform_from_left_to_right,
-                self._cameras_calibration.left_camera_matrix
+                right_image[None],
+                left_depth[None],
+                self._cameras_calibration.transform_from_left_to_right.to(device),
+                self._cameras_calibration.left_camera_matrix.to(device)
             )
             generated_right_image = kornia.warp_frame_depth(
-                left_image,
-                right_depth,
-                torch.inverse(self._cameras_calibration.transform_from_left_to_right),
-                self._cameras_calibration.left_camera_matrix
+                left_image[None],
+                right_depth[None],
+                torch.inverse(self._cameras_calibration.transform_from_left_to_right).to(device),
+                self._cameras_calibration.left_camera_matrix.to(device)
             )
-        return generated_left_image, generated_right_image
+        return generated_left_image[0], generated_right_image[0]
 
     @staticmethod
     def numpy_image(image):
