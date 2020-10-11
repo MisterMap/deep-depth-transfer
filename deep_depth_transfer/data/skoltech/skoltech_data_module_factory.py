@@ -9,12 +9,13 @@ from ..video_dataset import VideoDataset
 
 class SkoltechDataModuleFactory():
     def __init__(self, directory="datasets"):
-        self._left_directory = os.path.join(directory, "left")
-        self._right_directory = os.path.join(directory, "right")
+        self._left_directory = os.path.join(directory, "sequences/00/image_2")
+        self._right_directory = os.path.join(directory, "sequences/00/image_3")
 
     def make_dataset_manager(self,
                              final_size,
                              transform_manager_parameters,
+                             batch_size=64,
                              split=(80, 10, 10),
                              num_workers=4,
                              device="cpu"):
@@ -32,5 +33,9 @@ class SkoltechDataModuleFactory():
         )
         cameras_calibration = SkoltechCamerasCalibrationFactory().make_cameras_calibration(original_image_size,
                                                                                            final_size, device)
-        return UnsupervisedDepthDataModule(dataset, transform_manager, cameras_calibration,
-                                           num_workers=num_workers, split=split)
+        return UnsupervisedDepthDataModule(dataset,
+                                           transform_manager,
+                                           cameras_calibration,
+                                           batch_size,
+                                           num_workers=num_workers,
+                                           split=split)
