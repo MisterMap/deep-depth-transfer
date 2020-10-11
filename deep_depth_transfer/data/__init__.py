@@ -1,1 +1,2 @@
 from .kitti.kitti_data_module_factory import KittiDataModuleFactory
+from .skoltech.skoltech_data_module_factory import SkoltechDataModuleFactory
