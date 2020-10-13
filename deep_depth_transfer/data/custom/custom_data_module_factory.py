@@ -7,7 +7,7 @@ from ..unsupervised_depth_data_module import UnsupervisedDepthDataModule
 from ..video_dataset import VideoDataset
 
 
-class CustomDatasetManagerFactory():
+class CustomDataModuleFactory():
     def __init__(self, directory="datasets"):
         self._left_directory = os.path.join(directory, "left")
         self._right_directory = os.path.join(directory, "right")
@@ -28,5 +28,5 @@ class CustomDatasetManagerFactory():
         )
         cameras_calibration = CustomCamerasCalibrationFactory().make_cameras_calibration(original_image_size,
                                                                                          final_size, device)
-        return UnsupervisedDatasetManager(dataset, transform_manager, cameras_calibration,
+        return UnsupervisedDepthDataModule(dataset, transform_manager, cameras_calibration,
                                           num_workers=num_workers, split=split)

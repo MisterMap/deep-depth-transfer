@@ -21,7 +21,7 @@ class DataTransformManager:
                 width=self._final_img_size[1],
                 always_apply=True,
                 p=1
-            ),
+            )
         ]
         self._normalize_transform = albumentations.Normalize()
         self._normalize_no_transform = albumentations.Normalize(mean=(0, 0, 0), std=(1, 1, 1))
