@@ -1,1 +1,42 @@
-.idea
+# Pacharm settings
+.idea/
+
+# Venv
+venv/
+
+# Dataset
+datasets/
+
+# Python chache
+__pycache__/
+.ipynb_checkpoints
+.cache
+
+# Logs folders
+logs
+tmp
+mlruns
+
+# Audio and video
+*.avi
+*.mp4
+
+# Images
+*.jpg
+*.bmp
+*.png
+*.svg
+!test/loss_dataset/*.png
+
+# Archives
+*.tgz
+*.zip
+*.rar
+*.gz
+
+# Python models
+*.npy
+*.pkl
+*.pt
+*.pth
+*.ckpt
