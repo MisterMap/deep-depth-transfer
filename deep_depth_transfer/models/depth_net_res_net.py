@@ -106,6 +106,9 @@ class DepthNetResNet(nn.Module):
         # nn.Upsample(scale_factor=2)
         # self.last_up = LastUpBlock(n_base_channels * 4, 1)
 
+    def depth(self, x):
+        return self.forward(x)
+
     def forward(self, x, is_return_depth=True):
 
         outputs_before_pooling = []
