@@ -55,3 +55,11 @@ class UnsupervisedDepthDataModule(pl.LightningDataModule):
 
     def get_cameras_calibration(self):
         return self._cameras_calibration
+
+    def test_dataset(self, parameters=False):
+        transform = self._data_transform_manager.get_test_transform(parameters)
+        self._test_dataset.dataset.set_transform(transform)
+        return self._test_dataset
+
+    def set_batch_size(self, batch_size):
+        self._batch_size = batch_size

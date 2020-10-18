@@ -1,3 +1,4 @@
+from .concat_dataset import ConcatDataset
 from .kitti.kitti_data_module_factory import KittiDataModuleFactory
 from .skoltech.skoltech_data_module_factory import SkoltechDataModuleFactory
 from .tum_rgbd.tum_validation_data_module_factory import TumValidationDataModuleFactory
