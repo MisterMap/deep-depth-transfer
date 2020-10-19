@@ -12,3 +12,15 @@ class MLFlowLogger(pl.loggers.MLFlowLogger):
         path = f"tmp/{tag}_{global_step:04d}.png"
         figure.savefig(path)
         self.experiment.log_artifact(self.run_id, path)
+
+    def log_metrics(self, **kwargs):
+        try:
+            super().log_metrics(**kwargs)
+        except ConnectionError as msg:
+            print(msg)
+
+    def log_hyperparams(self, **kwargs):
+        try:
+            super().log_hyperparams(**kwargs)
+        except ConnectionError as msg:
+            print(msg)

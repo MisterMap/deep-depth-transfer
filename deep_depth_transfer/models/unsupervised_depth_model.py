@@ -5,13 +5,14 @@ import torch.nn as nn
 
 class UnsupervisedDepthModel(pl.LightningModule):
     def __init__(self, params, pose_net, depth_net, criterion, result_visualizer=None, stereo=True, mono=True,
-                 *args, **kwargs):
+                 use_ground_truth_poses=False, *args, **kwargs):
         super().__init__()
         self.save_hyperparameters(params)
         self.hparams.model = str(type(self))
         assert stereo or mono
         self._stereo = stereo
         self._mono = mono
+        self._use_groun_truth_poses = use_ground_truth_poses
         self._pose_net = pose_net
         self._depth_net = depth_net
         self._criterion = criterion
@@ -69,18 +70,23 @@ class UnsupervisedDepthModel(pl.LightningModule):
             ]
         return images
 
-    def get_transformations(self, images):
-        if self._mono and self._stereo:
+    def get_transformations(self, images, batch):
+        if self._mono and self._stereo and not self._use_groun_truth_poses:
             transformations = [
                 self.pose(images[0], images[1]),
                 self.pose(images[1], images[0]),
                 self.pose(images[2], images[3]),
                 self.pose(images[3], images[2])
             ]
-        elif self._mono:
+        elif self._mono and not self._use_groun_truth_poses:
             transformations = [
                 self.pose(images[0], images[1]),
                 self.pose(images[1], images[0])
+            ]
+        elif self._mono and not self._stereo:
+            transformations = [
+                (batch["current_angle"], batch["current_position"]),
+                (batch["next_angle"], batch["next_position"]),
             ]
         else:
             transformations = None
@@ -89,7 +95,7 @@ class UnsupervisedDepthModel(pl.LightningModule):
     def loss(self, batch):
         images = self.get_images(batch)
         depths = [self.depth(image) for image in images]
-        transformations = self.get_transformations(images)
+        transformations = self.get_transformations(images, batch)
         return self._criterion(images, depths, transformations)
 
     def training_step(self, batch, *args):
