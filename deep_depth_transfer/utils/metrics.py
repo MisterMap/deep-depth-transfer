@@ -8,7 +8,7 @@ class DepthMetric:
         self._min_value = 1e-7
         self._metrics = [
             'RMSE', 'tRMSE', 'MAE', 'tMAE', 'RMSElog', 'SRD', 'ARD', 'SIlog', 'delta1', 'delta2',
-            'delta3', 'PSNR', 'rPSNR'
+            'delta3', 'PSNR', 'rPSNR', 'abs_rel', 'sq_rel'
         ]
 
     def threshold(self, y1, y2, threshold=1.25):
@@ -19,6 +19,12 @@ class DepthMetric:
         result = torch.where(max_ratio < threshold, torch.tensor(1., device=y1.device),
                              torch.tensor(0., device=y1.device))
         return torch.mean(result) * 100.
+
+    def abs_rel(self, y1, y2):
+        return torch.mean(torch.abs(y1 - y2) / y2)
+
+    def sq_rel(self, y1, y2):
+        return torch.mean((y1 - y2) ** 2 / y2)
 
     def rmse(self, y1, y2):
         diff = y1 - y2
@@ -94,7 +100,9 @@ class DepthMetric:
             self.threshold(output, ground_truth, threshold=1.25 ** 2),
             self.threshold(output, ground_truth, threshold=1.25 ** 3),
             self.psnr(output, ground_truth),
-            self.rpsnr(output, ground_truth)
+            self.rpsnr(output, ground_truth),
+            self.abs_rel(output, ground_truth),
+            self.sq_rel(output, ground_truth)
         ]
         result = {}
         for key, value in zip(self._metrics, values):
