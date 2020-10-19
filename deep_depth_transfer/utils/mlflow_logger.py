@@ -18,6 +18,8 @@ class MLFlowLogger(pl.loggers.MLFlowLogger):
             super().log_metrics(**kwargs)
         except ConnectionError as msg:
             print(msg)
+        except TimeoutError as msg:
+            print(msg)
 
     def log_hyperparams(self, *args, **kwargs):
         try:

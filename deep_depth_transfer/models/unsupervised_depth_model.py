@@ -26,6 +26,8 @@ class UnsupervisedDepthModel(pl.LightningModule):
     def cuda(self, *args, **kwargs):
         self._mean = self._mean.cuda(*args, **kwargs)
         self._std = self._std.cuda(*args, **kwargs)
+        self._depth_net = self._depth_net.cuda(*args, **kwargs)
+        self._pose_net = self._pose_net.cuda(*args, **kwargs)
         return super().to(*args, **kwargs)
 
     def init_weights(self):
