@@ -19,8 +19,8 @@ class MLFlowLogger(pl.loggers.MLFlowLogger):
         except ConnectionError as msg:
             print(msg)
 
-    def log_hyperparams(self, **kwargs):
+    def log_hyperparams(self, *args, **kwargs):
         try:
-            super().log_hyperparams(**kwargs)
+            super().log_hyperparams(*args, **kwargs)
         except ConnectionError as msg:
             print(msg)
