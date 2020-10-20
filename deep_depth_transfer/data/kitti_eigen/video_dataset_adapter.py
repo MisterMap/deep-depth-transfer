@@ -18,7 +18,7 @@ class VideoDatasetAdapter(object):
         self._length = len(self.filenames)
         self.loader = pil_loader
         self.side_map = {"2": 2, "3": 3, "l": 2, "r": 3}
-        self._img_size = [1226, 370]
+        self._img_size = [370, 1226]
         self._img_ext = ".png"
 
     def get_image_size(self):
