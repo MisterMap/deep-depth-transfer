@@ -10,6 +10,7 @@ from deep_depth_transfer import UnsupervisedDepthModel, PoseNetResNet, DepthNetR
 from deep_depth_transfer.data import KittiDataModuleFactory
 from test.data_module_mock import DataModuleMock
 from deep_depth_transfer.utils import LoggerCollection, TensorBoardLogger, MLFlowLogger
+from pytorch_lightning.utilities import AttributeDict
 
 if sys.platform == "win32":
     WORKERS_COUNT = 0
@@ -23,7 +24,7 @@ class TestResultVisualizer(unittest.TestCase):
         dataset_folder = os.path.join(os.path.dirname(current_folder), "datasets", "kitti")
         data_module_factory = KittiDataModuleFactory(range(0, 301, 1), directory=dataset_folder)
         self._data_module = data_module_factory.make_dataset_manager(
-            final_size=(128, 384),
+            final_image_size=(128, 384),
             transform_manager_parameters={"filters": True},
             batch_size=1,
             num_workers=WORKERS_COUNT,
@@ -35,8 +36,9 @@ class TestResultVisualizer(unittest.TestCase):
         depth_net = DepthNetResNet()
         criterion = UnsupervisedCriterion(self._data_module.get_cameras_calibration(), 1, 1)
 
-        result_visualizer = ResultVisualizer()
-        self._model = UnsupervisedDepthModel(pose_net, depth_net, criterion, {"lr": 1e-3},
+        result_visualizer = ResultVisualizer(cameras_calibration=self._data_module.get_cameras_calibration())
+        params = AttributeDict(lr=1e-3, beta1=0.99, beta2=0.9)
+        self._model = UnsupervisedDepthModel(params, pose_net, depth_net, criterion,
                                              result_visualizer=result_visualizer).cuda()
         self._tb_logger = TensorBoardLogger('logs/')
         self._second_tb_logger = TensorBoardLogger('logs1/')

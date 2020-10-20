@@ -22,7 +22,7 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
         dataset_folder = os.path.join(os.path.dirname(current_folder), "datasets", "kitti")
         data_module_factory = KittiDataModuleFactory(range(0, 301, 1), directory=dataset_folder)
         self._data_module = data_module_factory.make_dataset_manager(
-            final_size=(128, 384),
+            final_image_size=(128, 384),
             transform_manager_parameters={"filters": True},
             batch_size=1,
             num_workers=WORKERS_COUNT,
