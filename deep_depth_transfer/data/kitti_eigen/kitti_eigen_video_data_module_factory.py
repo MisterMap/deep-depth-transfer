@@ -1,4 +1,4 @@
-from .kitti_eigen_cameras_calibration import TumCamerasCalibration
+from .kitti_eigen_cameras_calibration import KittiEigenCamerasCalibration
 from .video_dataset_adapter import VideoDatasetAdapter
 from ..data_transform_manager import DataTransformManager
 from ..unsupervised_depth_data_module import UnsupervisedDepthDataModule

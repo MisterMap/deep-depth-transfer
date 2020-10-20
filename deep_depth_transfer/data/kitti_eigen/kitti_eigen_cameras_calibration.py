@@ -1,7 +1,7 @@
 from ..cameras_calibration import CamerasCalibration
 
 
-class TumCamerasCalibration(CamerasCalibration):
+class KittiEigenCamerasCalibration(CamerasCalibration):
     def __init__(self, final_size, original_size, device):
         original_focal_x = 535.4
         original_focal_y = 539.2
