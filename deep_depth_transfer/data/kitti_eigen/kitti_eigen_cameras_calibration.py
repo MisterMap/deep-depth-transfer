@@ -1,5 +1,5 @@
 from ..cameras_calibration import CamerasCalibration
-
+import numpy as np
 
 class KittiEigenCamerasCalibration(CamerasCalibration):
     def __init__(self, final_size, original_size, device):
