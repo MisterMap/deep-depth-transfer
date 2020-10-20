@@ -3,11 +3,23 @@ from ..cameras_calibration import CamerasCalibration
 
 class KittiEigenCamerasCalibration(CamerasCalibration):
     def __init__(self, final_size, original_size, device):
-        original_focal_x = 535.4
-        original_focal_y = 539.2
-        original_cx = 320.1
-        original_cy = 247.6
-        camera_matrix = self.calculate_camera_matrix(final_size, original_size, original_focal_x, original_focal_y,
-                                                     original_cx, original_cy)
-        camera_baseline = 1.0
-        super().__init__(camera_baseline, camera_matrix, camera_matrix, device)
+        height, width = final_size
+        original_height, original_width = original_size
+        scale = min(original_height / height, original_width / width)
+        origin_focal = 707.0912
+        original_cx = 601.8873
+        original_cy = 183.1104
+        focal = origin_focal / scale
+        original_delta_cx = original_cx - original_width / 2
+        original_delta_cy = original_cy - original_height / 2
+        cx = width / 2 + original_delta_cx / scale
+        cy = height / 2 + original_delta_cy / scale
+        left_camera_matrix = np.array([[focal, 0., cx],
+                                        [0., focal, cy],
+                                        [0., 0., 1.]])
+        right_camera_matrix = np.array([[focal, 0., cx],
+                                        [0., focal, cy],
+                                        [0., 0., 1.]])
+        camera_baseline = 0.54
+        super().__init__(camera_baseline, left_camera_matrix, right_camera_matrix, device)
+
