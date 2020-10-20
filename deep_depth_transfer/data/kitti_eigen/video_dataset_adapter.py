@@ -1,5 +1,6 @@
 import os
 import cv2
+from PIL import Image
 
 def pil_loader(path):
     # open path as file to avoid ResourceWarning
