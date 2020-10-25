@@ -47,6 +47,10 @@ class UnsupervisedCriterion(nn.Module):
         else:
             self._pose_loss = None
         self._pose_metric = PoseMetric()
+        self._cameras_calibration = cameras_calibration
+
+    def get_cameras_calibration(self):
+        return self._cameras_calibration
 
     def forward(self, images, depths, transformations):
         left_current_image, left_next_image, right_current_image, right_next_image = images

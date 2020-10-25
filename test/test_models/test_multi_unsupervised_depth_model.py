@@ -3,13 +3,14 @@ import sys
 import unittest
 
 import pytorch_lightning as pl
-import pytorch_lightning.loggers
 from pytorch_lightning.utilities.parsing import AttributeDict
 
+from deep_depth_transfer.utils import TensorBoardLogger
 from deep_depth_transfer import PoseNetResNet, DepthNetResNet, UnsupervisedCriterion
 from deep_depth_transfer.models import MultiUnsupervisedDepthModel
 from deep_depth_transfer.data import KittiDataModuleFactory
 from test.data_module_mock import DataModuleMock
+from deep_depth_transfer import ResultVisualizer
 
 if sys.platform == "win32":
     WORKERS_COUNT = 0
@@ -35,6 +36,8 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
         depth_net = DepthNetResNet()
         criterion = UnsupervisedCriterion(self._data_module.get_cameras_calibration(), 1, 1)
 
+        result_visualizer = ResultVisualizer(cameras_calibration=self._data_module.get_cameras_calibration())
+
         inner_criterions = {}
         levels = [2, 3]
         for level in levels:
@@ -46,8 +49,10 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
                                                             pose_loss=False)
         params = AttributeDict(lr=1e-3, beta1=0.99, beta2=0.9)
         self._model = MultiUnsupervisedDepthModel(params, pose_net, depth_net, criterion,
-                                                  inner_criterions=inner_criterions)
+                                                  inner_criterions=inner_criterions,
+                                                  result_visualizer=result_visualizer)
 
     def test_unsupervised_depth_model(self):
-        trainer = pl.Trainer(max_epochs=1, gpus=1, progress_bar_refresh_rate=20)
+        logger = TensorBoardLogger("lightning_logs")
+        trainer = pl.Trainer(logger=logger, max_epochs=1, gpus=1, progress_bar_refresh_rate=20)
         trainer.fit(self._model, self._data_module)

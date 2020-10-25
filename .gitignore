@@ -14,6 +14,7 @@ __pycache__/
 
 # Logs folders
 logs
+lightning_logs
 tmp
 mlruns
 

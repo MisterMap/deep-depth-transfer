@@ -37,3 +37,4 @@ def show_inner_spatial_loss(inner_images, inner_depths, cameras_calibration):
     delta = torch.mean(torch.abs(right_generated - right_image[0]), dim=1)
     figure, axes = plt.subplots(1, 1)
     axes.imshow(numpy_depth(delta))
+    return figure

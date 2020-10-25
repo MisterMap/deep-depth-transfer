@@ -40,14 +40,14 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
         depths = []
         inner_depth_results = []
         for image in images:
-            depths.append(self.depth(image))
+            depths.append(self.depth(image)[0])
             inner_depth_results.append(self._depth_net.get_inner_result())
         images = [image[0] for image in images]
         figure = self._result_visualizer(images, depths)
         self.logger.log_figure("depth_reconstruction", figure, self.global_step)
 
         for level, criterion in self._inner_criterions.items():
-            inner_depths = [x[:, :, ::2 ** (level + 1), ::2 ** (level + 1)] for x in depths]
+            inner_depths = [x[None, :, ::2 ** (level + 1), ::2 ** (level + 1)] for x in depths]
             inner_images = [x[level] for x in inner_depth_results]
             figure = show_inner_spatial_loss(inner_images, inner_depths, criterion.get_cameras_calibration())
             self.logger.log_figure(f"inner_loss_{level}", figure, self.global_step)
