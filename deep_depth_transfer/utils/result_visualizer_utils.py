@@ -22,19 +22,19 @@ def generate_image(cameras_calibration, left_image, right_image, left_depth, rig
 
 
 def numpy_image(image):
-    return image.detach().cpu().permute(1, 2, 0).detach().numpy()
+    return image.detach().cpu().permute(1, 2, 0).numpy()
 
 
 def numpy_depth(depth):
-    return depth.detach().cpu().detach().numpy()
+    return depth.detach().cpu().numpy()
 
 
-def show_inner_spatial_loss(inner_images, inner_depths, cameras_calibration):
+def show_inner_spatial_loss(inner_images, inner_depths, cameras_calibration, **kwargs):
     left_image, right_image = inner_images[0], inner_images[2]
     left_depth, right_depth = inner_depths[0], inner_depths[2]
     left_generated, right_generated = generate_image(cameras_calibration, left_image[0], right_image[0],
                                                      left_depth[0], right_depth[0])
-    delta = torch.mean(torch.abs(right_generated - right_image[0]), dim=1)
-    figure, axes = plt.subplots(1, 1)
+    delta = torch.mean(torch.abs(right_generated - right_image[0]), dim=0)
+    figure, axes = plt.subplots(1, 1, **kwargs)
     axes.imshow(numpy_depth(delta))
     return figure
