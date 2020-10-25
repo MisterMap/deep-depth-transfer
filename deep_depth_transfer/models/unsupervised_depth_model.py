@@ -5,7 +5,7 @@ import torch.nn as nn
 
 class UnsupervisedDepthModel(pl.LightningModule):
     def __init__(self, params, pose_net, depth_net, criterion, result_visualizer=None, stereo=True, mono=True,
-                 use_ground_truth_poses=False, *args, **kwargs):
+                 use_ground_truth_poses=False):
         super().__init__()
         self.save_hyperparameters(params)
         self.hparams.model = str(type(self))
@@ -102,30 +102,33 @@ class UnsupervisedDepthModel(pl.LightningModule):
 
     def training_step(self, batch, *args):
         losses = self.loss(batch)
-        result = pl.TrainResult(losses["loss"])
-        result.log_dict(losses, on_step=True)
-        return result
+        train_losses = {}
+        for key, value in losses.items():
+            train_losses[f"train_{key}"] = value
+        self.log_dict(train_losses)
+        return losses["loss"]
 
-    def make_figure(self, batch, batch_index):
+    def show_figures(self, batch, batch_index):
         if self._result_visualizer is None:
-            return None
+            return
         if not self._result_visualizer.batch_index == batch_index:
-            return None
+            return
         images = self.get_images(batch)
         depths = [self.depth(image[:1])[0] for image in images]
         images = [image[0] for image in images]
-        return self._result_visualizer(images, depths)
+        figure = self._result_visualizer(images, depths)
+        self.logger.log_figure("depth_reconstruction", figure, self.global_step)
 
     def validation_step(self, batch, batch_index: int):
         losses = self.loss(batch)
 
-        figure = self.make_figure(batch, batch_index)
-        if figure is not None:
-            self.logger.log_figure("depth_reconstruction", figure, self.global_step)
+        self.show_figures(batch, batch_index)
 
-        result = pl.EvalResult(checkpoint_on=losses["loss"])
-        result.log_dict(losses, on_epoch=True)
-        return result
+        val_losses = {}
+        for key, value in losses.items():
+            val_losses[f"val_{key}"] = value
+        self.log_dict(val_losses)
+        return losses["loss"]
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(),

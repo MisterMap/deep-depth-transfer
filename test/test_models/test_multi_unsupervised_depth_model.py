@@ -7,8 +7,8 @@ import pytorch_lightning.loggers
 from pytorch_lightning.utilities.parsing import AttributeDict
 
 from deep_depth_transfer import PoseNetResNet, DepthNetResNet, UnsupervisedCriterion
+from deep_depth_transfer.models import MultiUnsupervisedDepthModel
 from deep_depth_transfer.data import KittiDataModuleFactory
-from deep_depth_transfer.models import ScaledUnsupervisedDepthModel
 from test.data_module_mock import DataModuleMock
 
 if sys.platform == "win32":
@@ -35,18 +35,19 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
         depth_net = DepthNetResNet()
         criterion = UnsupervisedCriterion(self._data_module.get_cameras_calibration(), 1, 1)
 
-        params = AttributeDict(
-            lr=1e-3,
-            beta1=0.99,
-            beta2=0.9,
-            scale_lr=1e-3,
-            initial_log_scale=0.,
-            initial_log_min_depth=0.,
-            initial_log_pose_scale=0.,
-        )
-        self._model = ScaledUnsupervisedDepthModel(params, pose_net, depth_net, criterion).cuda()
+        inner_criterions = {}
+        levels = [2, 3]
+        for level in levels:
+            cameras_calibration = self._data_module.get_cameras_calibration().calculate_scaled_cameras_calibration(
+                scale=level ** 2,
+                image_size=(128, 384)
+            )
+            inner_criterions[level] = UnsupervisedCriterion(cameras_calibration, lambda_s=0.15, smooth_loss=False,
+                                                            pose_loss=False)
+        params = AttributeDict(lr=1e-3, beta1=0.99, beta2=0.9)
+        self._model = MultiUnsupervisedDepthModel(params, pose_net, depth_net, criterion,
+                                                  inner_criterions=inner_criterions)
 
     def test_unsupervised_depth_model(self):
-        tb_logger = pl.loggers.TensorBoardLogger('logs/')
-        trainer = pl.Trainer(logger=tb_logger, max_epochs=1, gpus=1, progress_bar_refresh_rate=20)
+        trainer = pl.Trainer(max_epochs=1, gpus=1, progress_bar_refresh_rate=20)
         trainer.fit(self._model, self._data_module)
