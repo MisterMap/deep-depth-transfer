@@ -14,10 +14,13 @@ class MultiUnsupervisedDepthModelFactory(object):
 
         inner_criterions = {}
         for level in params.levels:
-            cameras_calibration = cameras_calibration.calculate_scaled_cameras_calibration(
-                scale=2 ** (level + 1),
-                image_size=params.image_size
-            )
+            if params.depth_down_sample == "up":
+                cameras_calibration = cameras_calibration
+            else:
+                cameras_calibration = cameras_calibration.calculate_scaled_cameras_calibration(
+                    scale=2 ** (level + 1),
+                    image_size=params.image_size
+                )
             inner_criterions[level] = UnsupervisedCriterion(
                 cameras_calibration,
                 lambda_s=params.inner_lambda_s,
