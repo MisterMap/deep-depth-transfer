@@ -41,7 +41,8 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
             beta2=0.9,
             scale_lr=1e-3,
             initial_log_scale=0.,
-            initial_log_min_depth=0.
+            initial_log_min_depth=0.,
+            initial_log_pose_scale=0.,
         )
         self._model = ScaledUnsupervisedDepthModel(params, pose_net, depth_net, criterion).cuda()
 

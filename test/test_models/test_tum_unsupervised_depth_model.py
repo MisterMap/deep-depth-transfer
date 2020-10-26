@@ -20,8 +20,8 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
     def setUp(self) -> None:
         current_folder = os.path.dirname(os.path.abspath(__file__))
         dataset_folder = os.path.join(os.path.dirname(current_folder), "datasets", "tum_rgbd",
-                                      "rgbd_dataset_freiburg3_large_cabinet_validation")
-        data_module_factory = TumVideoDataModuleFactory(dataset_folder)
+                                      "rgbd_dataset_freiburg3_long_office_household")
+        data_module_factory = TumVideoDataModuleFactory(dataset_folder, use_poses=True)
         self._data_module = data_module_factory.make_data_module(
             final_image_size=(128, 384),
             transform_manager_parameters={"filters": True},
@@ -38,7 +38,7 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
 
         params = AttributeDict(lr=1e-3, beta1=0.99, beta2=0.9)
         self._model = UnsupervisedDepthModel(params, pose_net, depth_net, criterion,
-                                             stereo=False, mono=True).cuda()
+                                             stereo=False, mono=True, use_ground_truth_poses=True).cuda()
 
     def test_unsupervised_depth_model(self):
         tb_logger = pl.loggers.TensorBoardLogger('logs/')

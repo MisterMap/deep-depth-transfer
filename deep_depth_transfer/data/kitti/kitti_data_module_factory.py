@@ -54,3 +54,10 @@ class KittiDataModuleFactory():
                                            batch_size,
                                            num_workers=num_workers,
                                            split=split)
+
+    def make_data_module_from_params(self, params):
+        transform_manager_parameters = {
+            "filters": params.transform_filters
+        }
+        return self.make_dataset_manager(params.image_size, transform_manager_parameters,
+                                         params.batch_size, params.split, params.num_workers)
