@@ -32,7 +32,7 @@ class CamerasCalibration(object):
         return camera_matrix
 
     def calculate_scaled_cameras_calibration(self, image_size, scale):
-        original_camera_matrix = self.left_camera_matrix[0]
+        original_camera_matrix = self.left_camera_matrix[0].cpu().detach().numpy()
         camera_matrix = CamerasCalibration.calculate_camera_matrix((image_size[0] // scale, image_size[1] // scale),
                                                                    (image_size[0], image_size[1]),
                                                                    original_camera_matrix[0, 0],
