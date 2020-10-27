@@ -12,8 +12,10 @@ class KittiEigenVideoDataModuleFactory(object):
 
     def make_data_module(self, transform_manager_parameters, final_image_size, split, batch_size, num_workers,
                          device):
-        video_dataset = VideoDatasetAdapter(self._main_folder, self._split)
-        original_image_size = video_dataset.get_image_size()
+        video_dataset_l = VideoDatasetAdapter(self._main_folder, self._split, "l")
+        video_dataset_r = VideoDatasetAdapter(self._main_folder, self._split, "r")
+
+        original_image_size = video_dataset_l.get_image_size()
         transform_manager = DataTransformManager(
             original_image_size,
             final_image_size,
@@ -21,7 +23,9 @@ class KittiEigenVideoDataModuleFactory(object):
             custom_additional_targets={"image2": "image"}
         )
         dataset = VideoDataset(
-            video_dataset
+            video_dataset_l,
+            video_dataset_r,
+            mono_video = False
         )
         cameras_calibration = KittiEigenCamerasCalibration(final_image_size, original_image_size, device)
         return UnsupervisedDepthDataModule(dataset,

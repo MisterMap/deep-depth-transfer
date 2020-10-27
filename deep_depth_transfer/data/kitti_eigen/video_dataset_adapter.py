@@ -11,7 +11,7 @@ def pil_loader(path):
 
 
 class VideoDatasetAdapter(object):
-    def __init__(self, main_folder, split):
+    def __init__(self, main_folder, split, side):
         with open(os.path.join(main_folder, "splits", split, "train_files.txt")) as fd:
             self.filenames = fd.readlines()
         self._main_folder = main_folder
@@ -20,13 +20,13 @@ class VideoDatasetAdapter(object):
         self.side_map = {"2": 2, "3": 3, "l": 2, "r": 3}
         self._img_size = [370, 1226]
         self._img_ext = ".png"
+        self._side = side
 
     def get_image_size(self):
         return self._img_size
 
     def __getitem__(self, index):
-        left_img, right_img = self.get_image_path(index)
-        return (self.loader(left_img), self.loader(left_img))
+        return self.loader(self.get_image_path(index))
 
     def get_image_pathes(self, index):
         line = self.filenames[index].split()
@@ -43,11 +43,9 @@ class VideoDatasetAdapter(object):
             side = None
 
         f_str = "{:010d}{}".format(frame_index, self._img_ext)
-        image_path_l = os.path.join(
-            self._main_folder, "kitti_data", folder, "image_0{}/data".format("l", f_str))
-        image_path_r = os.path.join(
-            self._main_folder, "kitti_data", folder, "image_0{}/data".format("r", f_str))
-        return (image_path_l, image_path_r)
+        image_path = os.path.join(
+            self._main_folder, "kitti_data", folder, "image_0{}/data".format(self._side, f_str))
+        return image_path
 
     def __len__(self):
         return self._length
