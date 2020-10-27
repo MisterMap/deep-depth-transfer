@@ -25,7 +25,8 @@ class KittiEigenVideoDataModuleFactory(object):
         dataset = VideoDataset(
             video_dataset_l,
             video_dataset_r,
-            mono_video = False
+            mono_video = False, 
+            transform = transform_manager
         )
         cameras_calibration = KittiEigenCamerasCalibration(final_image_size, original_image_size, device)
         return UnsupervisedDepthDataModule(dataset,
