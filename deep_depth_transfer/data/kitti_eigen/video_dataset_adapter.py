@@ -26,9 +26,6 @@ class VideoDatasetAdapter(object):
         return self._img_size
 
     def __getitem__(self, index):
-        return self.loader(self.get_image_path(index))
-
-    def get_image_pathes(self, index):
         line = self.filenames[index].split()
         folder = line[0]
 
@@ -41,11 +38,11 @@ class VideoDatasetAdapter(object):
             side = line[2]
         else:
             side = None
-
         f_str = "{:010d}{}".format(frame_index, self._img_ext)
         image_path = os.path.join(
-            self._main_folder, "kitti_data", folder, "image_0{}/data".format(self._side, f_str))
-        return image_path
+            self._main_folder, "kitti_data", folder, "image_0{}/data/{}".format(self.side_map[self._side], f_str))
+        return self.loader(image_path)
+
 
     def __len__(self):
         return self._length
