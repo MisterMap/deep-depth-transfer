@@ -1,6 +1,7 @@
+from .depth_evaluation_model import DepthEvaluationModel
 from .depth_model import DepthNet
 from .depth_net_res_net import DepthNetResNet
+from .multi_unsupervised_depth_model import MultiUnsupervisedDepthModel
 from .pose_model import PoseNet, PoseNetResNet
 from .scaled_unsupervised_depth_model import ScaledUnsupervisedDepthModel
-from .depth_evaluation_model import DepthEvaluationModel
-from .multi_unsupervised_depth_model import MultiUnsupervisedDepthModel
+from .unsupervised_depth_model import UnsupervisedDepthModel

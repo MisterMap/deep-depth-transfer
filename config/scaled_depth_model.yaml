@@ -1,0 +1,19 @@
+model_name: scaled_depth
+
+# Scaled unsupervised depth model config
+initial_log_scale: 4.
+initial_log_min_depth: 0.
+initial_log_pose_scale: 0.
+scale_lr: 0.01
+
+# Optimizer configs
+lr: 0.0001
+beta1: 0.9
+beta2: 0.99
+
+# Data model
+batch_size: 2
+num_workers: 4
+split: [0.8, 0.1, 0.1]
+image_size: [128, 384]
+transform_filters: True

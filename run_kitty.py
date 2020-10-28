@@ -6,7 +6,7 @@ from pytorch_lightning.core.saving import load_hparams_from_yaml
 from pytorch_lightning.utilities.parsing import AttributeDict
 
 from deep_depth_transfer.data import KittiDataModuleFactory
-from deep_depth_transfer.models.factory import MultiUnsupervisedDepthModelFactory
+from deep_depth_transfer.models.factory import ModelFactory
 from deep_depth_transfer.models.utils import load_undeepvo_checkpoint
 from deep_depth_transfer.utils import TensorBoardLogger, MLFlowLogger, LoggerCollection
 
@@ -47,7 +47,7 @@ params = load_hparams_from_yaml(arguments.config)
 params = AttributeDict(params)
 print("Load model from params \n" + str(params))
 data_model = data_model_factory.make_data_module_from_params(params)
-model = MultiUnsupervisedDepthModelFactory().make_model(params, data_model.get_cameras_calibration())
+model = ModelFactory().make_model(params, data_model.get_cameras_calibration())
 
 if arguments.load_model:
     print("Load checkpoint")

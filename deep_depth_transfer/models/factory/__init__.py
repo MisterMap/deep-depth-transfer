@@ -1,1 +1,3 @@
 from .multi_unsupervised_depth_model_factory import MultiUnsupervisedDepthModelFactory
+from .scaled_unsupervised_depth_model_factory import ScaledUnsupervisedDepthModelFactory
+from .model_factory import ModelFactory

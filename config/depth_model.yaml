@@ -1,8 +1,4 @@
-# Multi unsupervised depth model config
-levels: [0, 1, 2, 3]
-depth_down_sample: up
-inner_lambda_s: 0.15
-detach: True
+model_name: unsupervised_depth
 
 # Optimizer configs
 lr: 0.0001
@@ -10,7 +6,7 @@ beta1: 0.9
 beta2: 0.99
 
 # Data model
-batch_size: 1
+batch_size: 2
 num_workers: 4
 split: [0.8, 0.1, 0.1]
 image_size: [128, 384]
