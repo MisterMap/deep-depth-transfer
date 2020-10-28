@@ -101,16 +101,16 @@ class DepthNetResNet(nn.Module):
         self.last_up = LastUpBlockResNet(n_base_channels * 2, 32)
         
         self._last_conv = nn.Conv2d(32, 1, 1)
-        # possible option
-        # self.upsample = nn.ConvTranspose2d(n_base_channels * 4, n_base_channels * 4, 3, stride=2, padding=1)
-        # nn.Upsample(scale_factor=2)
-        # self.last_up = LastUpBlock(n_base_channels * 4, 1)
+        self._inner_result = []
 
     def depth(self, x):
         return self.forward(x)
 
-    def forward(self, x, is_return_depth=True):
+    def get_inner_result(self):
+        return self._inner_result
 
+    def forward(self, x, is_return_depth=True):
+        self._inner_result = []
         outputs_before_pooling = []
 
         skip_0 = torch.relu(self.skip_zero(x))
@@ -118,16 +118,19 @@ class DepthNetResNet(nn.Module):
         outputs_before_pooling.append(skip_00)
 
         x = self.first_level(x)
+        self._inner_result.append(x)
         skip_1 = self.first_skip(x)
         outputs_before_pooling.append(skip_1)  # 64
 
         x = self.second_level(x)
+        self._inner_result.append(x)
         skip_2 = self.second_skip(x)
         outputs_before_pooling.append(skip_2)  # 64
         out = x
         before_pooling = None
         for (i, block) in enumerate(self.down_blocks):
             (out, before_pooling) = block(out)
+            self._inner_result.append(out)
             outputs_before_pooling.append(before_pooling)
 
         out = before_pooling

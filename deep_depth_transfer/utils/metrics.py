@@ -94,7 +94,7 @@ class DepthMetric:
             self.threshold(output, ground_truth, threshold=1.25 ** 2),
             self.threshold(output, ground_truth, threshold=1.25 ** 3),
             self.psnr(output, ground_truth),
-            self.rpsnr(output, ground_truth)
+            self.rpsnr(output, ground_truth),
         ]
         result = {}
         for key, value in zip(self._metrics, values):
