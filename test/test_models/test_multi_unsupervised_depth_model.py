@@ -28,6 +28,7 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
             num_workers=WORKERS_COUNT,
             detach=True,
             levels=(1,),
+            depth_down_sample="net",
             inner_lambda_s=0.15,
             lr=1e-3,
             beta1=0.99,

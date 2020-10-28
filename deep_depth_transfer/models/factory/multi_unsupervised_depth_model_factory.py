@@ -1,4 +1,4 @@
-from .. import PoseNetResNet, DepthNetResNet, MultiUnsupervisedDepthModel
+from .. import PoseNetResNet, DepthNetResNet, MultiUnsupervisedDepthModel, MultiDepthNet
 from ... import ResultVisualizer
 from ...criterion import UnsupervisedCriterion
 
@@ -7,7 +7,10 @@ class MultiUnsupervisedDepthModelFactory(object):
     @staticmethod
     def make_model(params, cameras_calibration):
         pose_net = PoseNetResNet()
-        depth_net = DepthNetResNet()
+        if params.depth_down_sample == "net":
+            depth_net = MultiDepthNet()
+        else:
+            depth_net = DepthNetResNet()
         criterion = UnsupervisedCriterion(cameras_calibration)
 
         result_visualizer = ResultVisualizer(cameras_calibration=cameras_calibration)

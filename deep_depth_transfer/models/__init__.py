@@ -5,3 +5,4 @@ from .multi_unsupervised_depth_model import MultiUnsupervisedDepthModel
 from .pose_model import PoseNet, PoseNetResNet
 from .scaled_unsupervised_depth_model import ScaledUnsupervisedDepthModel
 from .unsupervised_depth_model import UnsupervisedDepthModel
+from .multi_depth_net import MultiDepthNet

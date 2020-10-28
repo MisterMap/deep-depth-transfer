@@ -2,8 +2,8 @@ model_name: multi_depth
 
 # Multi unsupervised depth model config
 levels: [0, 1, 2, 3]
-depth_down_sample: avg
-inner_lambda_s: 0
+depth_down_sample: net
+inner_lambda_s: 0.5
 detach: True
 
 # Optimizer configs

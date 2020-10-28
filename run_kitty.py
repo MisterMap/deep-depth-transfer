@@ -45,6 +45,7 @@ data_model_factory = KittiDataModuleFactory(frames, arguments.sequences, argumen
 # Load parameters
 params = load_hparams_from_yaml(arguments.config)
 params = AttributeDict(params)
+params.frames = arguments.frames
 print("Load model from params \n" + str(params))
 data_model = data_model_factory.make_data_module_from_params(params)
 model = ModelFactory().make_model(params, data_model.get_cameras_calibration())
