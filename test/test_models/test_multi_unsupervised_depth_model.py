@@ -8,7 +8,7 @@ from pytorch_lightning.utilities.parsing import Namespace
 import pytorch_lightning.core.saving
 
 from deep_depth_transfer.data import KittiDataModuleFactory
-from deep_depth_transfer.models.factory import MultiUnsupervisedDepthModelFactory
+from deep_depth_transfer.models.factory import ModelFactory
 from deep_depth_transfer.utils import TensorBoardLogger
 from test.data_module_mock import DataModuleMock
 
@@ -21,6 +21,7 @@ else:
 class TestUnsupervisedDepthModel(unittest.TestCase):
     def setUp(self) -> None:
         params = AttributeDict(
+            model_name="multi_depth",
             image_size=(128, 384),
             batch_size=1,
             transform_filters=True,
@@ -28,11 +29,12 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
             num_workers=WORKERS_COUNT,
             detach=True,
             levels=(1,),
-            depth_down_sample="net",
+            depth_down_sample="net_image",
             inner_lambda_s=0.15,
             lr=1e-3,
             beta1=0.99,
-            beta2=0.9
+            beta2=0.9,
+            eps=1e-6
         )
         current_folder = os.path.dirname(os.path.abspath(__file__))
         dataset_folder = os.path.join(os.path.dirname(current_folder), "datasets", "kitti")
@@ -40,7 +42,7 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
         self._data_module = data_module_factory.make_data_module_from_params(params)
         self._data_module = DataModuleMock(self._data_module)
 
-        self._model = MultiUnsupervisedDepthModelFactory().make_model(
+        self._model = ModelFactory().make_model(
             params,
             self._data_module.get_cameras_calibration()
         )

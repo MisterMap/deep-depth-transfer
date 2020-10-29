@@ -7,7 +7,7 @@ class MultiUnsupervisedDepthModelFactory(object):
     @staticmethod
     def make_model(params, cameras_calibration):
         pose_net = PoseNetResNet()
-        if params.depth_down_sample == "net":
+        if params.depth_down_sample == "net" or params.depth_down_sample == "net_image":
             depth_net = MultiDepthNet()
         else:
             depth_net = DepthNetResNet()
