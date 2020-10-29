@@ -5,7 +5,7 @@ from ...criterion import UnsupervisedCriterion
 
 class ScaledUnsupervisedDepthModelFactory(object):
     @staticmethod
-    def make_model(params, cameras_calibration):
+    def make_model(params, cameras_calibration, mono, stereo):
         pose_net = PoseNetResNet()
         depth_net = DepthNetResNet()
         criterion = UnsupervisedCriterion(cameras_calibration)
@@ -18,5 +18,8 @@ class ScaledUnsupervisedDepthModelFactory(object):
             depth_net,
             criterion,
             result_visualizer=result_visualizer,
+            mono=mono,
+            stereo=stereo,
+            use_ground_truth_poses=params.use_poses
         )
         return model

@@ -88,6 +88,8 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
         figure = self._result_visualizer([image[0] for image in images], [x[0] for x in depths])
         self.logger.log_figure("depth_reconstruction", figure, self.global_step)
 
+        if not self._stereo:
+            return
         for level, criterion in self._inner_criterions.items():
             if self.hparams.depth_down_sample == "min":
                 inner_depths = [-self._down_samples[level](-x) for x in depths]

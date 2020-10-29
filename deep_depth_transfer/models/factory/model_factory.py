@@ -5,12 +5,12 @@ from .unsupervised_depth_model_factory import UnsupervisedDepthModelFactory
 
 class ModelFactory(object):
     @staticmethod
-    def make_model(params, cameras_calibration):
+    def make_model(params, cameras_calibration, mono=True, stereo=True):
         if params.model_name == "multi_depth":
-            return MultiUnsupervisedDepthModelFactory().make_model(params, cameras_calibration)
+            return MultiUnsupervisedDepthModelFactory().make_model(params, cameras_calibration, mono, stereo)
         elif params.model_name == "scaled_depth":
-            return ScaledUnsupervisedDepthModelFactory().make_model(params, cameras_calibration)
+            return ScaledUnsupervisedDepthModelFactory().make_model(params, cameras_calibration, mono, stereo)
         elif params.model_name == "unsupervised_depth":
-            return UnsupervisedDepthModelFactory().make_model(params, cameras_calibration)
+            return UnsupervisedDepthModelFactory().make_model(params, cameras_calibration,  mono, stereo)
         else:
             raise ValueError(f"Unknown model name {params.model_name}")

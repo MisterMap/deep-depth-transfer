@@ -3,4 +3,5 @@ from .pose_loss import PoseLoss
 from .spatial_photometric_consistency_loss import SpatialPhotometricConsistencyLoss
 from .temporal_photometric_consistency_loss import TemporalPhotometricConsistencyLoss
 from .unsupervised_criterion import UnsupervisedCriterion
+from .mono_unsupervised_criterion import MonoUnsupervisedCriterion
 from .pose_metric import PoseMetric

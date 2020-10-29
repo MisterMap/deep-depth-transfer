@@ -2,7 +2,7 @@ model_name: multi_depth
 
 # Multi unsupervised depth model config
 levels: [0, 1, 2, 3]
-depth_down_sample: net_image
+depth_down_sample: net
 inner_lambda_s: 0
 detach: False
 

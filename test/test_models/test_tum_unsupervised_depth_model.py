@@ -36,7 +36,7 @@ class TestUnsupervisedDepthModel(unittest.TestCase):
         depth_net = DepthNetResNet()
         criterion = MonoUnsupervisedCriterion(self._data_module.get_cameras_calibration(), 1, 1)
 
-        params = AttributeDict(lr=1e-3, beta1=0.99, beta2=0.9)
+        params = AttributeDict(lr=1e-3, beta1=0.99, beta2=0.9, eps=1e-6)
         self._model = UnsupervisedDepthModel(params, pose_net, depth_net, criterion,
                                              stereo=False, mono=True, use_ground_truth_poses=True).cuda()
 
