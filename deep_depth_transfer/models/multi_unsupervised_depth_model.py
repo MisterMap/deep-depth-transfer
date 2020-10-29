@@ -62,7 +62,7 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
             if self.hparams.depth_down_sample == "net_image":
                 inner_images = [self._image_down_samples[level](x) for x in images]
             else:
-                inner_images = [self._up_samples[level](x) for x in inner_depth_results]
+                inner_images = [self._up_samples[level](x[level]) for x in inner_depth_results]
             if self.hparams.detach:
                 inner_images = [x.detach() for x in inner_images]
             inner_losses = criterion(inner_images, inner_depths, transformations)
@@ -96,7 +96,7 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
             else:
                 inner_depths = [self._down_samples[level](x) for x in depths]
             if self.hparams.depth_down_sample == "net_image":
-                inner_images = [self._image_down_samples[level](x) for x in images]
+                inner_images = [self._image_down_samples[level](x[level]) for x in images]
             else:
                 inner_images = [self._up_samples[level](x) for x in inner_depth_results]
             figure = show_inner_spatial_loss(inner_images, inner_depths, criterion.get_cameras_calibration(),
