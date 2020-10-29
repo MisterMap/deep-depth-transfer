@@ -1,5 +1,6 @@
 pykitti
 googledrivedownloader
+scikit-build
 numpy
 scipy
 matplotlib
