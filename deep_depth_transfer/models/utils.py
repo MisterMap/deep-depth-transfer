@@ -2,6 +2,7 @@ from collections import OrderedDict
 import re
 
 import torch
+import torch.nn as nn
 
 
 def load_undeepvo_checkpoint(model, path, strict=False):
@@ -29,3 +30,9 @@ def unfreeze_last_layer(model):
     model._pose_net.transl3.requires_grad = True
     model._pose_net.rot3.requires_grad = True
     model._depth_net._last_conv.requires_grad = True
+
+
+def init_parameters(model):
+    for m in model.modules():
+        if isinstance(m, nn.Linear) or isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d):
+            nn.init.xavier_normal_(m.weight.data)

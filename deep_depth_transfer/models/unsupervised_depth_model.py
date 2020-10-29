@@ -133,4 +133,5 @@ class UnsupervisedDepthModel(pl.LightningModule):
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(),
                                 lr=self.hparams.lr,
-                                betas=(self.hparams.beta1, self.hparams.beta2))
+                                betas=(self.hparams.beta1, self.hparams.beta2),
+                                eps=self.hparams.eps)

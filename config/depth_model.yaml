@@ -4,6 +4,7 @@ model_name: unsupervised_depth
 lr: 0.0001
 beta1: 0.9
 beta2: 0.99
+eps: 0.000001
 
 # Data model
 batch_size: 2

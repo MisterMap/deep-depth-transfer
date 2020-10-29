@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torchvision import models
+from .utils import init_parameters
 
 
 class UnetUpBlockResNet(nn.Module):
@@ -101,6 +102,9 @@ class DepthNetResNet(nn.Module):
         self.last_up = LastUpBlockResNet(n_base_channels * 2, 32)
         
         self._last_conv = nn.Conv2d(32, 1, 1)
+        init_parameters(self._last_depth_blocks)
+        init_parameters(self.last_up)
+        init_parameters(self._last_conv)
         self._inner_result = []
 
     def depth(self, x):

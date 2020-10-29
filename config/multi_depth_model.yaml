@@ -3,13 +3,14 @@ model_name: multi_depth
 # Multi unsupervised depth model config
 levels: [0, 1, 2, 3]
 depth_down_sample: net
-inner_lambda_s: 0.5
+inner_lambda_s: 0
 detach: True
 
 # Optimizer configs
 lr: 0.0001
 beta1: 0.9
 beta2: 0.99
+eps: 0.000001
 
 # Data model
 batch_size: 2

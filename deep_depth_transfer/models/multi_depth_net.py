@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torchvision import models
+from .utils import init_parameters
 
 
 class UnetUpBlockResNet(nn.Module):
@@ -106,6 +107,9 @@ class MultiDepthNet(nn.Module):
             LastUpBlockResNet(128, 32),
             LastUpBlockResNet(64, 32)
         ])
+
+        init_parameters(self._last_depth_blocks)
+        init_parameters(self.up_blocks)
 
         self._multi_depths = []
         self._inner_result = []

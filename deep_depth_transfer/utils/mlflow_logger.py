@@ -5,6 +5,7 @@ import os
 
 
 class MLFlowLogger(pl.loggers.MLFlowLogger):
+
     @pl.utilities.rank_zero_only
     def log_figure(self, tag, figure, global_step=None, close=True, walltime=None):
         try:
