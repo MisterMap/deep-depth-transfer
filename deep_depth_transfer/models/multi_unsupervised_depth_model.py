@@ -17,6 +17,7 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
                 module.padding_mode = "reflect"
         self._down_samples = {}
         self._up_samples = {}
+        self._image_down_sample = {}
         print(self.hparams.depth_down_sample)
         for level in self._inner_criterions.keys():
             kernel_size = 2 ** (level + 1)
@@ -32,6 +33,8 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
             elif self.hparams.depth_down_sample == "net":
                 self._down_samples[level] = nn.Identity()
                 self._up_samples[level] = nn.Identity()
+            if self.hparams.depth_down_sample == "net_image":
+                self._image_down_sample[level] = nn.AvgPool2d(kernel_size, kernel_size)
 
     def loss(self, batch):
         images = self.get_images(batch)
@@ -50,11 +53,14 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
         for level, criterion in self._inner_criterions.items():
             if self.hparams.depth_down_sample == "min":
                 inner_depths = [-self._down_samples[level](-x) for x in depths]
-            elif self.hparams.depth_down_sample == "net":
+            elif self.hparams.depth_down_sample == "net" or self.hparams.depth_down_sample == "net_image":
                 inner_depths = [x[level] for x in multi_depth_results]
             else:
                 inner_depths = [self._down_samples[level](x) for x in depths]
-            inner_images = [self._up_samples[level](x[level]) for x in inner_depth_results]
+            if self.hparams.depth_down_sample == "net_image":
+                inner_images = [self._up_samples[level](x) for x in images]
+            else:
+                inner_images = [self._up_samples[level](x) for x in inner_depth_results]
             if self.hparams.detach:
                 inner_images = [x.detach() for x in inner_images]
             inner_losses = criterion(inner_images, inner_depths, transformations)
@@ -73,7 +79,7 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
         inner_depth_results = []
         multi_depth_results = []
         for image in images:
-            depths.append(self.depth(image)[0])
+            depths.append(self.depth(image))
             inner_depth_results.append(self._depth_net.get_inner_result())
             if self.hparams.depth_down_sample == "net":
                 multi_depth_results.append(self._depth_net.get_multi_depths())
@@ -83,12 +89,15 @@ class MultiUnsupervisedDepthModel(UnsupervisedDepthModel):
 
         for level, criterion in self._inner_criterions.items():
             if self.hparams.depth_down_sample == "min":
-                inner_depths = [-self._down_samples[level](-x)[None] for x in depths]
+                inner_depths = [-self._down_samples[level](-x) for x in depths]
             elif self.hparams.depth_down_sample == "net":
                 inner_depths = [x[level] for x in multi_depth_results]
             else:
-                inner_depths = [self._down_samples[level](x)[None] for x in depths]
-            inner_images = [self._up_samples[level](x[level]) for x in inner_depth_results]
+                inner_depths = [self._down_samples[level](x) for x in depths]
+            if self.hparams.depth_down_sample == "net_image":
+                inner_images = [self._up_samples[level](x) for x in images]
+            else:
+                inner_images = [self._up_samples[level](x) for x in inner_depth_results]
             figure = show_inner_spatial_loss(inner_images, inner_depths, criterion.get_cameras_calibration(),
                                              dpi=100)
             self.logger.log_figure(f"inner_loss_{level}", figure, self.global_step)
