@@ -20,5 +20,8 @@ class VideoDatasetAdapter(object):
         image = cv2.imread(os.path.join(self._main_folder, self._rgb_images[index]))
         return image
 
+    def get_next_image(self, index):
+        return self[index + 1]
+
     def __len__(self):
         return self._length

@@ -10,5 +10,8 @@ class VideoDatasetAdapter(object):
     def __getitem__(self, index):
         return self._dataset.get_rgb(index)[self._index]
 
+    def get_next_image(self, index):
+        return self[index + 1]
+
     def __len__(self):
         return len(self._dataset.cam2_files)

@@ -26,8 +26,8 @@ class VideoDataset(Dataset):
         image_data_point = {
             "image": np.array(self._left_video_dataset[index]),
             "image2": np.array(self._right_video_dataset[index]),
-            "image3": np.array(self._left_video_dataset[index + 1]),
-            "image4": np.array(self._right_video_dataset[index + 1])
+            "image3": np.array(self._left_video_dataset.get_next_image(index)),
+            "image4": np.array(self._right_video_dataset.get_next_image(index))
         }
         image_data_point = self._transform(**image_data_point)
         image_data_point = {
@@ -41,7 +41,7 @@ class VideoDataset(Dataset):
     def mono_video_item(self, index):
         image_data_point = {
             "image": np.array(self._left_video_dataset[index]),
-            "image2": np.array(self._left_video_dataset[index + 1]),
+            "image2": np.array(self._left_video_dataset.get_next_image(index)),
         }
         image_data_point = self._transform(**image_data_point)
         image_data_point = {
